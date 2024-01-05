@@ -25,10 +25,13 @@ public class JDBCInsertTest {
 
 			System.out.println(sql);
 
+			
 			pstmt = conn.prepareStatement(sql);
-
+			
+			
 			int affectedRow = pstmt.executeUpdate();
 
+		
 			System.out.println("affectedRow : " + affectedRow);
 
 		} catch (ClassNotFoundException e) {
