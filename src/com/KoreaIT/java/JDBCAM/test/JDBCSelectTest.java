@@ -47,12 +47,11 @@ public class JDBCSelectTest {
 				articles.add(article);
 
 			}
+			System.out.println("  번호  /  등록 날짜  /  수정 날짜  /  제목  /  내용  ");
 			for (int i = 0; i < articles.size(); i++) {
-				System.out.println("번호 : " + articles.get(i).getId());
-				System.out.println("등록 날짜 : " + articles.get(i).getRegDate());
-				System.out.println("수정 날짜 : " + articles.get(i).getUpdateDate());
-				System.out.println("제목 : " + articles.get(i).getTitle());
-				System.out.println("내용 : " + articles.get(i).getBody());
+				System.out.println(articles.get(i).getId() + "  /  " + articles.get(i).getRegDate() + "  /  "
+						+ articles.get(i).getUpdateDate() + "  /  " + articles.get(i).getTitle() + "  /  "
+						+ articles.get(i).getBody());
 			}
 
 		} catch (ClassNotFoundException e) {
