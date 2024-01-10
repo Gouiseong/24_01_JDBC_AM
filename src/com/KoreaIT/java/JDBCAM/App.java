@@ -7,12 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-
+import java.time.LocalDateTime;
+import com.KoreaIT.java.JDBCAM.Member;
 import com.KoreaIT.java.JDBCAM.util.DBUtil;
 import com.KoreaIT.java.JDBCAM.util.SecSql;
 import com.KoreaIT.java.JDBCAM.util.Util;
 
 public class App {
+	List<Member> members = new ArrayList<>();
+	int lastId = 0;
 
 	public void run() {
 		System.out.println("==프로그램 시작==");
@@ -219,8 +222,93 @@ public class App {
 			DBUtil.delete(conn, sql);
 
 			System.out.println(id + "번 글이 삭제되었습니다.");
+		} else if (cmd.equals("member join")) {
+			System.out.println(" == 회원 가입 == ");
+			int id = lastId + 1;
+			String loginId = "";
+			while (true) {
+				System.out.print("아이디 : ");
+				loginId = sc.nextLine().trim();
+				if (isJoinableLoginId(loginId) == false) {
+					System.out.println("이미 있는 아이디입니다.");
+					continue;
+				} else if (loginId == "") {
+					System.out.println("필수 입력 정보입니다.");
+					continue;
+				} else if(loginId.contains(" ")) {
+					System.out.println("공백 없이 입력해주세요");
+					continue;
+				}
+				break;
+			}
+			String loginPw = "";
+			while (true) {
+				while (true) {
+					System.out.print("비밀번호 : ");
+					loginPw = sc.nextLine().trim();
+					if (loginPw == "") {
+						System.out.println("필수 입력 정보입니다.");
+						continue;
+					}else if(loginPw.contains(" ")) {
+						System.out.println("공백 없이 입력해주세요");
+						continue;
+					}
+					break;
+				}
+				System.out.print("비밀번호 확인 : ");
+				String loginPwCheck = sc.nextLine();
+				if (loginPw.equals(loginPwCheck) == false) {
+					System.out.println("비번 틀림");
+					continue;
+				}
+				break;
+			}
+			String name="";
+			while(true) {
+				System.out.print("이름 : ");
+				name = sc.nextLine().trim();
+				if(name=="") {
+					System.out.println("필수 입력 정보입니다.");
+					continue;
+				}else if(name.contains(" ")) {
+					System.out.println("공백 없이 입력해주세요");
+					continue;
+				}
+				break;
+			}
+
+			LocalDateTime now = LocalDateTime.now();
+			String regDate = Util.getNowDate_TimeStr(now);
+			String updateDate = Util.getNowDate_TimeStr(now);
+
+
+			lastId++;
+			Member member = new Member(id, regDate, updateDate, loginId, loginPw, name);
+			members.add(member);
+			
+			SecSql sql = new SecSql();
+						
+			sql.append("INSERT INTO `member`");
+			sql.append("SET regDate = ?,",regDate);
+			sql.append("updateDate = ?,",updateDate);
+			sql.append("loginId = ?,", loginId);
+			sql.append("loginPw= ?,", loginPw);
+			sql.append("name = ?;",name);
+
+			int memberNum= DBUtil.insert(conn, sql);
+			System.out.printf("%d번 회원이 가입되었습니다.\n",memberNum);
+
 		}
 
 		return 0;
+	}
+
+	private boolean isJoinableLoginId(String loginId) {
+		for (Member member : members) {
+			if (member.getLoginId().equals(loginId)) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
