@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import com.KoreaIT.java.JDBCAM.Article;
+import com.KoreaIT.java.JDBCAM.service.ArticleService;
 import com.KoreaIT.java.JDBCAM.util.DBUtil;
 import com.KoreaIT.java.JDBCAM.util.SecSql;
 import com.KoreaIT.java.JDBCAM.util.Util;
@@ -15,9 +16,12 @@ public class ArticleController {
 	Connection conn;
 	Scanner sc;
 
+	private ArticleService articleService;
+
 	public ArticleController(Connection conn, Scanner sc) {
 		this.conn = conn;
 		this.sc = sc;
+		this.articleService = new ArticleService(conn);
 	}
 
 	public void doWrite() {
@@ -27,15 +31,7 @@ public class ArticleController {
 		System.out.print("내용 : ");
 		String body = sc.nextLine();
 
-		SecSql sql = new SecSql();
-
-		sql.append("INSERT INTO article");
-		sql.append("SET regDate = NOW(),");
-		sql.append("updateDate = NOW(),");
-		sql.append("title = ?,", title);
-		sql.append("`body`= ?;", body);
-
-		int id = DBUtil.insert(conn, sql);
+		int id = articleService.doWrite(title, body);
 
 		System.out.println(id + "번 글이 생성되었습니다");
 
