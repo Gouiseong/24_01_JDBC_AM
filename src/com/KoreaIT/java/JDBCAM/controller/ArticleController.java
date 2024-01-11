@@ -1,32 +1,27 @@
 package com.KoreaIT.java.JDBCAM.controller;
 
-import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
-import com.KoreaIT.java.JDBCAM.Article;
+import com.KoreaIT.java.JDBCAM.container.Container;
+import com.KoreaIT.java.JDBCAM.dto.Article;
 import com.KoreaIT.java.JDBCAM.service.ArticleService;
 import com.KoreaIT.java.JDBCAM.util.Util;
 
 public class ArticleController {
-	private Connection conn;
-	private Scanner sc;
 
 	private ArticleService articleService;
 
-	public ArticleController(Connection conn, Scanner sc) {
-		this.conn = conn;
-		this.sc = sc;
-		this.articleService = new ArticleService(conn);
+	public ArticleController() {
+		this.articleService = Container.articleService;
 	}
 
 	public void doWrite() {
 		System.out.println("==글쓰기==");
 		System.out.print("제목 : ");
-		String title = sc.nextLine();
+		String title = Container.sc.nextLine();
 		System.out.print("내용 : ");
-		String body = sc.nextLine();
+		String body = Container.sc.nextLine();
 
 		int id = articleService.doWrite(title, body);
 
@@ -70,9 +65,9 @@ public class ArticleController {
 
 		System.out.println("==수정==");
 		System.out.print("새 제목 : ");
-		String title = sc.nextLine().trim();
-		System.out.println("새 내용 : ");
-		String body = sc.nextLine().trim();
+		String title = Container.sc.nextLine().trim();
+		System.out.print("새 내용 : ");
+		String body = Container.sc.nextLine().trim();
 
 		articleService.doUpdate(id, title, body);
 
