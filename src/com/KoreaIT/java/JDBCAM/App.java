@@ -62,7 +62,11 @@ public class App {
 		MemberController memberController = new MemberController(conn, sc);
 		ArticleController articleController = new ArticleController(conn, sc);
 
-		if (cmd.equals("member join")) {
+		if (cmd.equals("member login")) {
+			memberController.doLogin();
+		} else if (cmd.equals("member logout")) {
+			memberController.doLogout();
+		} else if (cmd.equals("member join")) {
 			memberController.doJoin();
 		} else if (cmd.equals("article write")) {
 			articleController.doWrite();

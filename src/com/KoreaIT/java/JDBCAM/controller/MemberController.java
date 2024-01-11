@@ -3,16 +3,18 @@ package com.KoreaIT.java.JDBCAM.controller;
 import java.sql.Connection;
 import java.util.Scanner;
 
-import com.KoreaIT.java.JDBCAM.util.DBUtil;
-import com.KoreaIT.java.JDBCAM.util.SecSql;
+import com.KoreaIT.java.JDBCAM.service.MemberService;
 
 public class MemberController {
-	Connection conn;
-	Scanner sc;
+	private Connection conn;
+	private Scanner sc;
+
+	private MemberService memberService;
 
 	public MemberController(Connection conn, Scanner sc) {
 		this.conn = conn;
 		this.sc = sc;
+		this.memberService = new MemberService(conn);
 	}
 
 	public void doJoin() {
@@ -31,12 +33,7 @@ public class MemberController {
 				continue;
 			}
 
-			SecSql sql = new SecSql();
-			sql.append("SELECT COUNT(*) > 0");
-			sql.append("FROM `member`");
-			sql.append("WHERE loginId = ?;", loginId);
-
-			boolean isLoginIdDup = DBUtil.selectRowBooleanValue(conn, sql);
+			boolean isLoginIdDup = memberService.isLoginIdDup(loginId);
 
 			if (isLoginIdDup) {
 				System.out.println(loginId + "는(은) 이미 사용중");
@@ -87,16 +84,7 @@ public class MemberController {
 			break;
 		}
 
-		SecSql sql = new SecSql();
-
-		sql.append("INSERT INTO `member`");
-		sql.append("SET regDate = NOW(),");
-		sql.append("updateDate = NOW(),");
-		sql.append("loginId = ?,", loginId);
-		sql.append("loginPw = ?,", loginPw);
-		sql.append("`name` = ?;", name);
-
-		int id = DBUtil.insert(conn, sql);
+		int id = memberService.doJoin(loginId, loginPw, name);
 
 		System.out.println(id + "번 회원이 가입 되었습니다");
 
