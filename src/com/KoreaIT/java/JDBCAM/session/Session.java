@@ -6,6 +6,7 @@ public class Session {
 
 	public Member loginedMember;
 	public int loginedMemberId;
+	public String loginedMemberName;
 
 	public Session() {
 		loginedMemberId = -1;
@@ -14,6 +15,7 @@ public class Session {
 	public void login(Member member) {
 		loginedMember = member;
 		loginedMemberId = member.getId();
+		loginedMemberName = member.getName();
 	}
 
 	public void logout() {
