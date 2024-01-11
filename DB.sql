@@ -20,6 +20,9 @@ CREATE TABLE `member`(
     `name` CHAR(100) NOT NULL
 );
 
+ALTER TABLE `member` ADD INDEX(`loginId`);
+
+ALTER TABLE article ADD COLUMN memberId INT(10) UNSIGNED NOT NULL AFTER updateDate;
 
 INSERT INTO `member`
 SET regDate = NOW(),
@@ -38,8 +41,23 @@ loginPw = 'test2',
 INSERT INTO article
 SET regDate = NOW(),
 updateDate = NOW(),
-title = CONCAT('제목', RAND()),
-`body` = CONCAT('내용', RAND());
+memberId = 1,
+title = '제목1',
+`body` = '내용1';
+
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 2,
+title = '제목2',
+`body` = '내용2';
+
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 1,
+title = '제목3',
+`body` = '내용3';
 
 SELECT *
 FROM `member`;
@@ -49,6 +67,11 @@ FROM article
 ORDER BY id DESC;
 
 #############################################################
+
+
+SELECT *
+FROM `member`
+WHERE loginId = 'test1';
 
 
 UPDATE article
@@ -71,3 +94,5 @@ WHERE loginId = 'test3';
 
 SELECT 1 + 1;
 SELECT 1 > 1;
+
+SELECT COUNT(*) > 0 FROM `member` WHERE loginI = 'test4';
